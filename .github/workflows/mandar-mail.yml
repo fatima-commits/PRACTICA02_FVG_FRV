@@ -32,7 +32,4 @@ jobs:
             
             Rama: ${{ github.ref_name }}
             Autor: ${{ github.actor }}
-            Commit: ${{ github.sha }}
-            
-            Puedes revisar los cambios en:
-            ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
+            Commit: ${{ github.sha }
