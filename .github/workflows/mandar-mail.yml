@@ -1,3 +1,6 @@
+# .github/workflows/send-email.yml
+# Copiar este archivo a: .github/workflows/send-email.yml en tu repositorio
+
 name: Send Email Notification
 
 on:
@@ -14,25 +17,41 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      
+      - name: Get branch name
+        id: branch
+        run: echo "branch_name=$(echo ${GITHUB_REF#refs/heads/})" >> $GITHUB_OUTPUT
       
       - name: Send email notification
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 587
+          server_port: 465
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
-          subject: "Cambios subidos a rama ${{ github.ref_name }}"
-          to: ${{ secrets.EMAIL_TO }}
-          from: ${{ secrets.EMAIL_FROM }}
+          subject: "🔔 Cambios subidos a rama ${{ steps.branch.outputs.branch_name }}"
+          to: ${{ secrets.EMAIL_RECIPIENT }}
+          from: "GitHub Actions <${{ secrets.EMAIL_USERNAME }}>"
           body: |
-            ¡Hola!
+            ¡Hola equipo!
             
             Se han detectado cambios en tu repositorio.
             
-            Rama: ${{ github.ref_name }}
-            Autor: ${{ github.actor }}
-            Commit: ${{ github.sha }}
+            📋 Detalles del push:
+            ├─ Rama: ${{ steps.branch.outputs.branch_name }}
+            ├─ Autor: ${{ github.actor }}
+            ├─ Commit: ${{ github.sha }}
+            ├─ Mensaje: ${{ github.event.head_commit.message }}
+            └─ Timestamp: $(date)
             
-            Puedes revisar los cambios en:
-            ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
+            🔗 Link al repositorio:
+            ${{ github.server_url }}/${{ github.repository }}/tree/${{ steps.branch.outputs.branch_name }}
+            
+      - name: Log execution
+        run: |
+          echo "✅ Correo enviado exitosamente"
+          echo "Rama: ${{ steps.branch.outputs.branch_name }}"
+          echo "Destinatario: ${{ secrets.EMAIL_RECIPIENT }}"
+          echo "Tiempo: $(date)"
