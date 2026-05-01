@@ -41,7 +41,7 @@ jobs:
                         
       - name: Log execution
         run: |
-          echo "✅ Correo enviado exitosamente"
+          echo "Correo enviado exitosamente"
           echo "Rama: ${{ steps.branch.outputs.branch_name }}"
           echo "Destinatario: ${{ secrets.EMAIL_RECIPIENT }}"
           echo "Tiempo: $(date)"
