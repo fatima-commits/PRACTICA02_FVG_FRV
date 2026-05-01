@@ -19,12 +19,12 @@ jobs:
         uses: dawidd6/action-send-mail@v3
         with:
           server_address: smtp.gmail.com
-          server_port: 465
+          server_port: 587
           username: ${{ secrets.EMAIL_USERNAME }}
           password: ${{ secrets.EMAIL_PASSWORD }}
           subject: "Cambios subidos a rama ${{ github.ref_name }}"
-          to: tu-correo@gmail.com
-          from: "GitHub Actions <tu-correo@gmail.com>"
+          to: ${{ secrets.EMAIL_TO }}
+          from: ${{ secrets.EMAIL_FROM }}
           body: |
             ¡Hola!
             
@@ -36,6 +36,3 @@ jobs:
             
             Puedes revisar los cambios en:
             ${{ github.server_url }}/${{ github.repository }}/tree/${{ github.ref_name }}
-            
-            ---
-            Este correo fue enviado automáticamente por GitHub Actions.
